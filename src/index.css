@@ -1,0 +1,142 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #faf6f0;
+  --cream-elevated: rgba(255, 249, 242, 0.82);
+  --warm: #f2e8d9;
+  --blush: #e8c9b0;
+  --clay: #c4885a;
+  --terracotta: #a0522d;
+  --deep: #3b2314;
+  --sage: #8a9a7b;
+  --ink: #2c1f14;
+  --white: #ffffff;
+  --line-soft: rgba(196, 136, 90, 0.16);
+  --bg-radial: rgba(236, 209, 188, 0.85);
+  --bg-start: #fffaf4;
+  --bg-mid: #faf4eb;
+  --bg-end: #f7efe6;
+  --noise-opacity: 0.5;
+  --text-muted: #7a6252;
+  --text-soft: #ab917e;
+  --text-faint: #b09880;
+  --text-hero: #745f4e;
+  --panel-strong: rgba(255, 255, 255, 0.82);
+  --panel-soft: rgba(255, 249, 242, 0.72);
+  --panel-glass: rgba(255, 255, 255, 0.62);
+  --overlay-strong: rgba(43, 25, 12, 0.85);
+  --overlay-soft: rgba(43, 25, 12, 0.5);
+  --shadow-soft: 0 16px 34px rgba(59, 35, 20, 0.08);
+  --shadow-medium: 0 20px 45px rgba(77, 44, 23, 0.08);
+  --shadow-strong: 0 30px 80px rgba(85, 50, 24, 0.12);
+  --surface-inverse: #ffffff;
+  --danger-soft: #fee;
+  --danger-line: #f99;
+}
+
+:root[data-theme='dark'] {
+  --cream: #0f1115;
+  --cream-elevated: rgba(20, 24, 30, 0.86);
+  --warm: #171b22;
+  --blush: #2b3542;
+  --clay: #d59a6a;
+  --terracotta: #efb183;
+  --deep: #f5ede3;
+  --sage: #8ea88b;
+  --ink: #e9e1d7;
+  --white: #ffffff;
+  --line-soft: rgba(213, 154, 106, 0.16);
+  --bg-radial: rgba(110, 76, 49, 0.22);
+  --bg-start: #0a0d12;
+  --bg-mid: #0f1319;
+  --bg-end: #141a22;
+  --noise-opacity: 0.14;
+  --text-muted: #b6b0a8;
+  --text-soft: #8f918f;
+  --text-faint: #70767f;
+  --text-hero: #cfc5b8;
+  --panel-strong: rgba(21, 26, 34, 0.92);
+  --panel-soft: rgba(18, 22, 29, 0.84);
+  --panel-glass: rgba(26, 31, 39, 0.68);
+  --overlay-strong: rgba(5, 7, 10, 0.88);
+  --overlay-soft: rgba(8, 10, 14, 0.58);
+  --shadow-soft: 0 16px 34px rgba(0, 0, 0, 0.32);
+  --shadow-medium: 0 20px 45px rgba(0, 0, 0, 0.38);
+  --shadow-strong: 0 30px 80px rgba(0, 0, 0, 0.5);
+  --surface-inverse: #f4eadf;
+  --danger-soft: rgba(123, 49, 49, 0.22);
+  --danger-line: rgba(240, 165, 122, 0.45);
+}
+
+html { scroll-behavior: smooth; }
+html, body, #root { min-height: 100%; }
+
+body {
+  background:
+    radial-gradient(circle at top left, var(--bg-radial), transparent 28%),
+    linear-gradient(180deg, var(--bg-start) 0%, var(--bg-mid) 46%, var(--bg-end) 100%);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  min-height: 100svh;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--noise-opacity);
+}
+
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+button { cursor: pointer; font-family: inherit; }
+a { text-decoration: none; }
+img { max-width: 100%; display: block; }
+button, a { transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-slow-rev {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes arrow-pulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.2); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes fadeUpSoft {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

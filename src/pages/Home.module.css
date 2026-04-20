@@ -1,0 +1,59 @@
+.quickDock {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.quickLink {
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  animation: dockFloat 4.8s ease-in-out infinite;
+}
+
+.quickPrimary {
+  background: var(--deep);
+  color: var(--white);
+  box-shadow: 0 14px 30px rgba(59,35,20,0.18);
+}
+
+.quickSecondary {
+  background: var(--cream-elevated);
+  color: var(--deep);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 14px 30px rgba(59,35,20,0.12);
+  animation-delay: 0.35s;
+}
+
+.quickLink:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+@keyframes dockFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@media (max-width: 640px) {
+  .quickDock {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .quickLink {
+    flex: 1;
+  }
+}
