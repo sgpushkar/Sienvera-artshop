@@ -1,87 +1,42 @@
 # Sienvera Artshop
 
-React + TypeScript + Vite storefront for an art studio.
+Sienvera Artshop is a handmade art storefront built for presenting original work with warmth, texture, and a gallery-like feel. The website brings canvas, crochet, and resin pieces into one curated digital space where visitors can browse available work, explore artwork details, and reach out directly for enquiries or custom commissions.
 
-## Quick start
+## Overview
 
-```bash
-npm install
-npm run dev
-```
+This project is designed as a studio-first artshop experience rather than a generic catalog. The public-facing site balances visual storytelling with practical enquiry actions, while the admin area supports updating the collection and shop details behind the scenes.
 
-## Production build
+## What The Website Includes
 
-```bash
-npm run build
-```
+- A branded hero section with studio messaging, navigation, and theme toggle
+- A curated gallery with category filters for canvas, crochet, and resin work
+- Lightbox viewing for exploring individual pieces in more detail
+- Direct enquiry actions through Instagram and email
+- A custom order section that explains the commission journey
+- A contact area for ongoing conversations and studio discovery
+- An admin route for managing artworks and store configuration
 
-## Supabase + Cloudinary setup
+## Visitor Experience
 
-Create a `.env` file from `.env.example` and fill in:
+The storefront is built to feel like a small online exhibition. Visitors can move from the hero section into the collection, filter by medium, open pieces in a lightbox, and contact the studio through the channel that feels most natural. The custom order area makes the commission process feel approachable and personal instead of transactional.
 
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_upload_preset
-```
+## Admin Experience
 
-If these values are missing, the app falls back to local browser storage so you can still run it locally.
+The admin side supports maintaining the shop without changing code. Artwork entries, availability, and core storefront details such as the shop name, tagline, and contact links are managed through the dashboard flow.
 
-## Suggested Supabase schema
+## Design Direction
 
-### `artworks`
+Sienvera Artshop leans into a soft, handcrafted visual identity. The interface uses expressive typography, layered backgrounds, atmospheric sections, and motion details to reflect the feeling of an art studio rather than a standard ecommerce template.
 
-```sql
-create table if not exists artworks (
-  id text primary key,
-  title text not null,
-  description text not null default '',
-  category text not null check (category in ('canvas', 'crochet', 'resin')),
-  image_url text not null,
-  cloudinary_public_id text,
-  available boolean not null default true,
-  created_at timestamptz not null default now()
-);
-```
+## Built With
 
-### `store_config`
+- React
+- TypeScript
+- Vite
+- React Router
+- Supabase support for store data
+- Cloudinary support for artwork image hosting
 
-```sql
-create table if not exists store_config (
-  id text primary key,
-  shop_name text not null,
-  tagline text not null,
-  instagram_url text not null,
-  contact_email text not null,
-  whatsapp_number text not null,
-  admin_password text not null
-);
-```
+## Project Purpose
 
-Seed one config row:
-
-```sql
-insert into store_config (
-  id,
-  shop_name,
-  tagline,
-  instagram_url,
-  contact_email,
-  whatsapp_number,
-  admin_password
-) values (
-  'primary',
-  'Sienvera Studio',
-  'Canvas paintings, crochet art and resin creations - each piece made by hand, made for you.',
-  'https://www.instagram.com/',
-  '',
-  '',
-  'admin123'
-)
-on conflict (id) do nothing;
-```
-
-## Cloudinary note
-
-The current upload flow uses an unsigned upload preset from the frontend. That is the simplest path for now, but for stronger security you should later move uploads behind a server/API route.
+This website is meant to help an independent art brand showcase handmade work, invite direct conversations, and make custom commissions feel clear, personal, and premium.
