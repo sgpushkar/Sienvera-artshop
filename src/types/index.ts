@@ -5,7 +5,9 @@ export interface ArtPiece {
   title: string;
   description: string;
   category: ArtCategory;
-  imageData: string; // base64 data URL
+  imageUrl: string;
+  imageData?: string;
+  cloudinaryPublicId?: string;
   available: boolean;
   createdAt: number;
 }

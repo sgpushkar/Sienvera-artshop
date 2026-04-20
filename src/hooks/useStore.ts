@@ -1,51 +1,73 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ArtPiece, StoreConfig } from '../types';
 import {
-  getArtPieces,
-  saveArtPieces,
   addArtPiece,
-  updateArtPiece,
   deleteArtPiece,
+  defaultConfig,
+  getArtPieces,
   getConfig,
+  saveArtPieces,
   saveConfig,
+  updateArtPiece,
 } from '../utils/storage';
 
 export function useStore() {
   const [pieces, setPieces] = useState<ArtPiece[]>([]);
-  const [config, setConfig] = useState<StoreConfig>(getConfig());
+  const [config, setConfig] = useState<StoreConfig>(defaultConfig);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const [nextPieces, nextConfig] = await Promise.all([getArtPieces(), getConfig()]);
+      setPieces(nextPieces);
+      setConfig(nextConfig);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load store data.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    setPieces(getArtPieces());
-  }, []);
-
-  const refresh = useCallback(() => {
-    setPieces(getArtPieces());
-  }, []);
-
-  const add = useCallback((piece: ArtPiece) => {
-    addArtPiece(piece);
-    refresh();
+    void refresh();
   }, [refresh]);
 
-  const update = useCallback((piece: ArtPiece) => {
-    updateArtPiece(piece);
-    refresh();
-  }, [refresh]);
+  const add = useCallback(
+    async (piece: ArtPiece) => {
+      await addArtPiece(piece);
+      await refresh();
+    },
+    [refresh]
+  );
 
-  const remove = useCallback((id: string) => {
-    deleteArtPiece(id);
-    refresh();
-  }, [refresh]);
+  const update = useCallback(
+    async (piece: ArtPiece) => {
+      await updateArtPiece(piece);
+      await refresh();
+    },
+    [refresh]
+  );
 
-  const updateConfig = useCallback((cfg: StoreConfig) => {
-    saveConfig(cfg);
+  const remove = useCallback(
+    async (id: string) => {
+      await deleteArtPiece(id);
+      await refresh();
+    },
+    [refresh]
+  );
+
+  const updateConfig = useCallback(async (cfg: StoreConfig) => {
+    await saveConfig(cfg);
     setConfig(cfg);
   }, []);
 
-  const reorder = useCallback((ordered: ArtPiece[]) => {
-    saveArtPieces(ordered);
+  const reorder = useCallback(async (ordered: ArtPiece[]) => {
+    await saveArtPieces(ordered);
     setPieces(ordered);
   }, []);
 
-  return { pieces, config, add, update, remove, updateConfig, reorder, refresh };
+  return { pieces, config, loading, error, add, update, remove, updateConfig, reorder, refresh };
 }

@@ -1,100 +1,87 @@
-# 🎨 Artisan Studio — Your Handmade Art Shop
+# Sienvera Artshop
 
-A beautiful, mobile-first art portfolio & shop website built with React + TypeScript + Vite.  
-Upload your art in an **admin panel** — no code changes ever needed.
+React + TypeScript + Vite storefront for an art studio.
 
----
+## Quick start
 
-## 🚀 Quick Start (3 steps)
-
-### 1. Install Node.js
-Download from https://nodejs.org (LTS version recommended)
-
-### 2. Install dependencies
-Open a terminal in this folder and run:
 ```bash
 npm install
-```
-
-### 3. Start the development server
-```bash
 npm run dev
 ```
-Then open http://localhost:5173 in your browser. Done! 🎉
 
----
-
-## 📦 Build for production (deploy online)
+## Production build
 
 ```bash
 npm run build
 ```
-This creates a `dist/` folder. Upload that folder to any free host:
-- **Netlify** → netlify.com/drop (drag & drop the dist folder)
-- **Vercel** → vercel.com
-- **GitHub Pages** → push to GitHub
 
----
+## Supabase + Cloudinary setup
 
-## 🔐 Admin Panel
+Create a `.env` file from `.env.example` and fill in:
 
-Go to: `yoursite.com/admin`  
-Default password: **admin123**
-
-In the admin panel you can:
-- ✅ Upload photos of your art (drag & drop or tap to select)
-- ✅ Add title, description, category (canvas / crochet / resin)
-- ✅ Mark pieces as Available or Sold
-- ✅ Edit or delete pieces
-- ✅ Change your shop name, tagline, Instagram link, WhatsApp number
-- ✅ Change your admin password
-
-**All data is saved automatically in the browser's localStorage.**
-
----
-
-## 📁 Project Structure
-
-```
-artshop/
-├── src/
-│   ├── components/
-│   │   ├── Hero.tsx          ← Landing section
-│   │   ├── Gallery.tsx       ← Art grid with tabs + lightbox
-│   │   ├── Lightbox.tsx      ← Full-screen image viewer
-│   │   ├── CustomOrder.tsx   ← Custom order section
-│   │   └── Connect.tsx       ← Instagram / WhatsApp links
-│   ├── pages/
-│   │   ├── Home.tsx          ← Public shop page
-│   │   └── Admin.tsx         ← Admin panel (password protected)
-│   ├── hooks/
-│   │   └── useStore.ts       ← State management
-│   ├── utils/
-│   │   └── storage.ts        ← localStorage read/write
-│   └── types/
-│       └── index.ts          ← TypeScript types
-├── index.html
-├── package.json
-└── vite.config.ts
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_unsigned_upload_preset
 ```
 
----
+If these values are missing, the app falls back to local browser storage so you can still run it locally.
 
-## 🌸 Customising
+## Suggested Supabase schema
 
-All customisation is done through the **Admin Panel** — no code needed!
+### `artworks`
 
-But if you want to change the colour palette, edit `src/index.css`:
-```css
-:root {
-  --cream: #faf6f0;
-  --clay: #c4885a;
-  --terracotta: #a0522d;
-  --sage: #8a9a7b;
-  /* etc. */
-}
+```sql
+create table if not exists artworks (
+  id text primary key,
+  title text not null,
+  description text not null default '',
+  category text not null check (category in ('canvas', 'crochet', 'resin')),
+  image_url text not null,
+  cloudinary_public_id text,
+  available boolean not null default true,
+  created_at timestamptz not null default now()
+);
 ```
 
----
+### `store_config`
 
-Made with ♥ for your art
+```sql
+create table if not exists store_config (
+  id text primary key,
+  shop_name text not null,
+  tagline text not null,
+  instagram_url text not null,
+  contact_email text not null,
+  whatsapp_number text not null,
+  admin_password text not null
+);
+```
+
+Seed one config row:
+
+```sql
+insert into store_config (
+  id,
+  shop_name,
+  tagline,
+  instagram_url,
+  contact_email,
+  whatsapp_number,
+  admin_password
+) values (
+  'primary',
+  'Sienvera Studio',
+  'Canvas paintings, crochet art and resin creations - each piece made by hand, made for you.',
+  'https://www.instagram.com/',
+  '',
+  '',
+  'admin123'
+)
+on conflict (id) do nothing;
+```
+
+## Cloudinary note
+
+The current upload flow uses an unsigned upload preset from the frontend. That is the simplest path for now, but for stronger security you should later move uploads behind a server/API route.

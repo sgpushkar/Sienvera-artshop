@@ -45,8 +45,8 @@ export default function Lightbox({ piece, config, total, index, onClose, onPrev,
 
         {/* Image */}
         <div className={styles.imageArea}>
-          {piece.imageData ? (
-            <img src={piece.imageData} alt={piece.title} className={styles.img} />
+          {piece.imageUrl ? (
+            <img src={piece.imageUrl} alt={piece.title} className={styles.img} />
           ) : (
             <div className={styles.noImg}>🎨</div>
           )}

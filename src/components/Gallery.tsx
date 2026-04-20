@@ -101,8 +101,8 @@ export default function Gallery({ pieces, config }: Props) {
                 }}
               >
                 <div className={styles.imageWrap}>
-                  {piece.imageData ? (
-                    <img src={piece.imageData} alt={piece.title} className={styles.image} />
+                  {piece.imageUrl ? (
+                    <img src={piece.imageUrl} alt={piece.title} className={styles.image} />
                   ) : (
                     <div className={styles.placeholder} style={{ background: placeholder.bg }}>
                       <span>{placeholder.label}</span>
